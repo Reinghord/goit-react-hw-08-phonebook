@@ -1,5 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux';
 // import PropTypes from 'prop-types';
+import { useEffect } from 'react';
+import { fetchContacts } from 'redux/phonebook/phonebook-operations';
 import s from './ContactList.module.css';
 import { removeContacts } from 'redux/phonebook/phonebook-operations';
 function ContactList() {
@@ -9,6 +11,9 @@ function ContactList() {
   const dispatch = useDispatch();
   const onDelete = id => dispatch(removeContacts(id));
 
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
   return (
     <>
       <ul>
@@ -20,7 +25,7 @@ function ContactList() {
             .map(contact => {
               return (
                 <li className={s.item} key={contact.id}>
-                  {contact.name}: {contact.phone}{' '}
+                  {contact.name}: {contact.number}{' '}
                   <button
                     className={s.button}
                     onClick={() => {

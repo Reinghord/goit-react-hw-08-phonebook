@@ -28,7 +28,7 @@ export const contactsSlice = createSlice({
       state.isLoading = true;
     },
     [addContacts.fulfilled](state, { payload }) {
-      state.data.push(payload);
+      state.data.push(payload.data);
       state.isLoading = false;
     },
     [addContacts.rejected](state, action) {
@@ -39,7 +39,7 @@ export const contactsSlice = createSlice({
       state.isLoading = true;
     },
     [removeContacts.fulfilled](state, { payload }) {
-      state.data = state.data.filter(({ id }) => id !== payload.id);
+      state.data = state.data.filter(({ id }) => id !== payload.data.id);
       state.isLoading = false;
     },
     [removeContacts.rejected](state, action) {
