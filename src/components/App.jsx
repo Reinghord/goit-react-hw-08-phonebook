@@ -49,7 +49,12 @@ function App() {
               <PrivateRoute redirectTo="/login" component={<Contacts />} />
             }
           />
-          <Route path="*" element={<Login />} />
+          <Route
+            path="*"
+            element={
+              <RestrictedRoute redirectTo="/contacts" component={<Login />} />
+            }
+          />
         </Route>
       </Routes>
     </>
