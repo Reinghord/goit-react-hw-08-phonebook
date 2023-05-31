@@ -5,6 +5,7 @@ import {
   removeContacts,
   updateContacts,
 } from './phonebook-operations';
+import { logOut } from 'redux/auth/auth-operations';
 
 export const contactsSlice = createSlice({
   name: 'contacts',
@@ -58,6 +59,11 @@ export const contactsSlice = createSlice({
     builder.addCase(updateContacts.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action;
+    });
+    builder.addCase(logOut.fulfilled, state => {
+      state.data = [];
+      state.error = null;
+      state.isLoading = false;
     });
   },
 });
