@@ -1,5 +1,4 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { mockapi } from 'services';
 import axios from 'axios';
 
 axios.defaults.baseURL = 'https://connections-api.herokuapp.com/';
@@ -48,7 +47,10 @@ export const updateContacts = createAsyncThunk(
   'contacts/updateContacts',
   async (contact, { rejectWithValue }) => {
     try {
-      const contacts = await axios.patch(`/contacts/${contact.id}`, contact);
+      const contacts = await axios.patch(
+        `/contacts/${contact.id}`,
+        contact.body
+      );
       return contacts;
     } catch (error) {
       return rejectWithValue(error);

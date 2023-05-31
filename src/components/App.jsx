@@ -1,23 +1,27 @@
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-// import { useSelector } from 'react-redux';
+import { useEffect, lazy } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
-import Register from './Register/Register';
-import Login from './Login/Login';
 import Navigation from './Navigation/Navigation';
 import { refreshUser } from 'redux/auth/auth-operations';
 import { PrivateRoute } from './PrivateRoute';
-import Contacts from './Contacts/Contacts';
 import { RestrictedRoute } from './RestrictedRoute';
+import { getIsRefreshing } from 'redux/auth/auth-selectors';
+
+const Register = lazy(() => import(`./Register/Register`));
+const Login = lazy(() => import(`./Login/Login`));
+const Contacts = lazy(() => import(`./Contacts/Contacts`));
 
 function App() {
   const dispatch = useDispatch();
-
+  const isRefresing = useSelector(getIsRefreshing);
+  console.log(isRefresing);
   useEffect(() => {
     dispatch(refreshUser());
   }, [dispatch]);
 
-  return (
+  return isRefresing ? (
+    <b>Refresing user...</b>
+  ) : (
     <>
       <Routes>
         <Route path="/" element={<Navigation />}>
@@ -32,17 +36,20 @@ function App() {
             }
           />
           <Route
+            index
             path="/login"
             element={
               <RestrictedRoute redirectTo="/contacts" component={<Login />} />
             }
           />
           <Route
+            index
             path="/contacts"
             element={
               <PrivateRoute redirectTo="/login" component={<Contacts />} />
             }
-          ></Route>
+          />
+          <Route path="*" element={<Login />} />
         </Route>
       </Routes>
     </>

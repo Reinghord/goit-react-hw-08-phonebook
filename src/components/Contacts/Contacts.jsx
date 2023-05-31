@@ -1,20 +1,37 @@
 import ContactForm from 'components/ContactForm/ContactForm';
 import ContactList from 'components/ContactList/ContactList';
 import Filter from 'components/Filter/Filter';
-import { useDispatch } from 'react-redux';
-import { useEffect } from 'react';
-import { fetchContacts } from 'redux/phonebook/phonebook-operations';
+//Material UI
+import Toolbar from '@mui/material/Toolbar';
+import Container from '@mui/material/Container';
 
 function Contacts() {
-
   return (
     <>
-      <h1>Phonebook</h1>
-      <ContactForm />
-
-      <h2>Contacts</h2>
-      <Filter />
-      <ContactList />
+      <Toolbar />
+      <Container
+        maxWidth="lg"
+        sx={{ mt: 4, mb: 4 }}
+        style={{
+          display: `flex`,
+          flexDirection: `column`,
+          textAlign: `center`,
+          alignItems: `center`,
+        }}
+      >
+        <h1>Phonebook</h1>
+        <ContactForm
+          sx={{
+            p: 2,
+            display: 'flex',
+            flexDirection: 'column',
+            height: 240,
+          }}
+        />
+        <h2>Contacts</h2>
+        <Filter />
+        <ContactList />
+      </Container>
     </>
   );
 }

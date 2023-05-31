@@ -3,6 +3,7 @@ import {
   addContacts,
   fetchContacts,
   removeContacts,
+  updateContacts,
 } from './phonebook-operations';
 
 export const contactsSlice = createSlice({
@@ -12,40 +13,52 @@ export const contactsSlice = createSlice({
     isLoading: false,
     error: null,
   },
-  extraReducers: {
-    [fetchContacts.pending](state, _) {
+  extraReducers: builder => {
+    builder.addCase(fetchContacts.pending, (state, _) => {
       state.isLoading = true;
-    },
-    [fetchContacts.fulfilled](state, { payload }) {
+    });
+    builder.addCase(fetchContacts.fulfilled, (state, { payload }) => {
       state.data = payload;
       state.isLoading = false;
-    },
-    [fetchContacts.rejected](state, action) {
+    });
+    builder.addCase(fetchContacts.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action;
-    },
-    [addContacts.pending](state, _) {
+    });
+    builder.addCase(addContacts.pending, (state, _) => {
       state.isLoading = true;
-    },
-    [addContacts.fulfilled](state, { payload }) {
+    });
+    builder.addCase(addContacts.fulfilled, (state, { payload }) => {
       state.data.push(payload.data);
       state.isLoading = false;
-    },
-    [addContacts.rejected](state, action) {
+    });
+    builder.addCase(addContacts.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action;
-    },
-    [removeContacts.pending](state, _) {
+    });
+    builder.addCase(removeContacts.pending, (state, _) => {
       state.isLoading = true;
-    },
-    [removeContacts.fulfilled](state, { payload }) {
+    });
+    builder.addCase(removeContacts.fulfilled, (state, { payload }) => {
       state.data = state.data.filter(({ id }) => id !== payload.data.id);
       state.isLoading = false;
-    },
-    [removeContacts.rejected](state, action) {
+    });
+    builder.addCase(removeContacts.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action;
-    },
+    });
+    builder.addCase(updateContacts.pending, (state, _) => {
+      state.isLoading = true;
+    });
+    builder.addCase(updateContacts.fulfilled, (state, { payload }) => {
+      const index = state.data.findIndex(el => el.id === payload.data.id);
+      state.data[index] = payload.data;
+      state.isLoading = false;
+    });
+    builder.addCase(updateContacts.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action;
+    });
   },
 });
 

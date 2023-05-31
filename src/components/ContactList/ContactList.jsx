@@ -1,12 +1,30 @@
 import { useSelector, useDispatch } from 'react-redux';
-// import PropTypes from 'prop-types';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { fetchContacts } from 'redux/phonebook/phonebook-operations';
-import s from './ContactList.module.css';
 import { removeContacts } from 'redux/phonebook/phonebook-operations';
+import { createPortal } from 'react-dom';
+import ContactEditor from 'components/ContactEditor/ContactEditor';
+import {
+  getContacts,
+  getFilteredContacts,
+} from 'redux/phonebook/phonebook-selectors';
+//Material UI
+import EditIcon from '@mui/icons-material/Edit';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Avatar from '@mui/material/Avatar';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import PersonIcon from '@mui/icons-material/Person';
+
 function ContactList() {
-  const contacts = useSelector(state => state.contacts.data);
-  const filter = useSelector(state => state.filter);
+  const [showModal, setShowModal] = useState(false);
+  const [editId, setEditId] = useState('');
+  const [editName, setEditName] = useState('');
+  const [editNumber, setEditNumber] = useState('');
+  const contacts = useSelector(getContacts);
+  const filteredContacts = useSelector(getFilteredContacts);
 
   const dispatch = useDispatch();
   const onDelete = id => dispatch(removeContacts(id));
@@ -14,37 +32,67 @@ function ContactList() {
   useEffect(() => {
     dispatch(fetchContacts());
   }, [dispatch]);
+
+  //Method to close Modal window
+  const onCloseModal = () => {
+    setShowModal(false);
+  };
+
+  const onHandleEdit = (id, name, number) => {
+    setEditId(id);
+    setEditName(name);
+    setEditNumber(number);
+    setShowModal(true);
+  };
+
   return (
     <>
-      <ul>
+      <List>
         {contacts.length > 0 &&
-          contacts
-            .filter(contact => {
-              return contact.name.toLowerCase().includes(filter.toLowerCase());
-            })
-            .map(contact => {
-              return (
-                <li className={s.item} key={contact.id}>
-                  {contact.name}: {contact.number}{' '}
-                  <button
-                    className={s.button}
-                    onClick={() => {
-                      onDelete(contact.id);
-                    }}
-                  >
-                    Delete
-                  </button>
-                </li>
-              );
-            })}
-      </ul>
+          filteredContacts.map(contact => {
+            return (
+              <ListItem key={contact.id}>
+                <ListItemAvatar>
+                  <Avatar>
+                    <PersonIcon />
+                  </Avatar>
+                </ListItemAvatar>
+                {contact.name}: {contact.number}
+                <IconButton
+                  edge="end"
+                  aria-label="delete"
+                  onClick={() => {
+                    onHandleEdit(contact.id, contact.name, contact.number);
+                  }}
+                >
+                  <EditIcon />
+                </IconButton>
+                <IconButton
+                  edge="end"
+                  aria-label="delete"
+                  onClick={() => {
+                    onDelete(contact.id);
+                  }}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </ListItem>
+            );
+          })}
+      </List>
+      {showModal &&
+        createPortal(
+          <ContactEditor
+            id={editId}
+            name={editName}
+            editNumber={editNumber}
+            onCloseModal={onCloseModal}
+          ></ContactEditor>,
+          document.body
+        )}
     </>
   );
 }
 
-// ContactList.propTypes = {
-//   appState: PropTypes.object.isRequired,
-//   onDelete: PropTypes.func.isRequired,
-// };
 
 export default ContactList;
