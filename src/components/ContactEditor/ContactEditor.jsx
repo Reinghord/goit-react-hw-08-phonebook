@@ -8,8 +8,8 @@ import { updateContacts } from 'redux/phonebook/phonebook-operations';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
-function ContactEditor({ id, name, editNumber, onCloseModal }) {
-  const [userName, setUserName] = useState(name);
+function ContactEditor({ id, editName, editNumber, onCloseModal }) {
+  const [name, setName] = useState(editName);
   const [number, setNumber] = useState(editNumber);
   const contacts = useSelector(state => state.contacts.data);
   const dispatch = useDispatch();
@@ -36,8 +36,8 @@ function ContactEditor({ id, name, editNumber, onCloseModal }) {
     const { name, value } = e.currentTarget;
 
     switch (name) {
-      case 'userName':
-        setUserName(value);
+      case 'name':
+        setName(value);
         break;
       case 'number':
         setNumber(value);
@@ -49,17 +49,15 @@ function ContactEditor({ id, name, editNumber, onCloseModal }) {
 
   const onHandleSubmit = e => {
     e.preventDefault();
-    if (
-      contacts.find(contact => contact.name === userName && contact.id !== id)
-    ) {
-      return alert(`${userName} is already in contacts.`);
+    if (contacts.find(contact => contact.name === name && contact.id !== id)) {
+      return alert(`${name} is already in contacts.`);
     }
     const contact = {
       id,
-      body: { name: userName, number: number },
+      body: { name, number },
     };
     onSubmit(contact);
-    setUserName('');
+    setName('');
     setNumber('');
     onCloseModal();
   };
@@ -87,8 +85,8 @@ function ContactEditor({ id, name, editNumber, onCloseModal }) {
             id="outlined-basic"
             label="Name"
             variant="standard"
-            name="userName"
-            value={userName}
+            name="name"
+            value={name}
             pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
             title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
             required

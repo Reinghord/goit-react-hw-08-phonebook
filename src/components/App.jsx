@@ -1,15 +1,15 @@
 import { useEffect, lazy } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
-import Navigation from './Navigation/Navigation';
+import Navigation from '../pages/Navigation/Navigation';
 import { refreshUser } from 'redux/auth/auth-operations';
 import { PrivateRoute } from './PrivateRoute';
 import { RestrictedRoute } from './RestrictedRoute';
 import { getIsRefreshing } from 'redux/auth/auth-selectors';
 
-const Register = lazy(() => import(`./Register/Register`));
-const Login = lazy(() => import(`./Login/Login`));
-const Contacts = lazy(() => import(`./Contacts/Contacts`));
+const Register = lazy(() => import(`../pages/Register/Register`));
+const Login = lazy(() => import(`../pages/Login/Login`));
+const Contacts = lazy(() => import(`../pages/Contacts/Contacts`));
 
 function App() {
   const dispatch = useDispatch();

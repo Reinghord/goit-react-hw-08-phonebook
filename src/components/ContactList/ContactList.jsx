@@ -84,7 +84,7 @@ function ContactList() {
         createPortal(
           <ContactEditor
             id={editId}
-            name={editName}
+            editName={editName}
             editNumber={editNumber}
             onCloseModal={onCloseModal}
           ></ContactEditor>,
@@ -93,6 +93,5 @@ function ContactList() {
     </>
   );
 }
-
 
 export default ContactList;
